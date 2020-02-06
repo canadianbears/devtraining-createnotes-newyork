@@ -4,18 +4,23 @@
         <client_script><![CDATA[function($rootScope,$scope) {
 	/* widget controller */
 	var c = this;
+	c.notePos = 0;
 	c.selectItem = function(idx) {
 		var id = c.data.notes[idx].sys_id;
+		notePos = idx;
 		console.log('Note ID: ' + id);
 		$rootScope.noteID = id;
 		$rootScope.$emit('selectNote', id);
-		
-	};
-	$rootScope.$on('updateNote', function(event,data) { 
-			console.log('Listener note update NoteID: ' + $rootScope.noteID);
-			
-		});
-	
+	}
+	$rootScope.$on('updateNote', function(event,r) { 
+		console.log("updateNote event received: " + event);
+		console.log('on list the data received is: '+r.title);
+		var objNote = {};
+		objNote.title = r.title;//r.title;
+		objNote.note = r.note
+		c.data.notes[c.notePos] = objNote;
+		console.log('on udateNote, data.noteID: '+r.noteID);
+	});
 }]]></client_script>
         <controller_as>c</controller_as>
         <css/>
@@ -54,14 +59,14 @@
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2020-02-06 01:00:10</sys_created_on>
         <sys_id>e8d805a51bba8010a32dfcc8cc4bcbcc</sys_id>
-        <sys_mod_count>11</sys_mod_count>
+        <sys_mod_count>36</sys_mod_count>
         <sys_name>Notes List</sys_name>
         <sys_package display_value="CreateNotes" source="x_snc_createnotes">df5fd9a5090232007f44e1046c8ff69f</sys_package>
         <sys_policy/>
         <sys_scope display_value="CreateNotes">df5fd9a5090232007f44e1046c8ff69f</sys_scope>
         <sys_update_name>sp_widget_e8d805a51bba8010a32dfcc8cc4bcbcc</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2020-02-06 17:38:49</sys_updated_on>
+        <sys_updated_on>2020-02-06 22:53:31</sys_updated_on>
         <template><![CDATA[<div class="panel panel-default">
   <div class="panel-heading clearfix">
     <h3 class="panel-title pull-left">
@@ -69,7 +74,7 @@
     </h3>
   </div>
   <div class="list-group">
-    <a class="list-group-item" ng-click="c.selectItem($index)" ng-repeat="note in data.notes">
+    <a class="list-group-item" ng-click = "c.selectItem($index)" ng-repeat="note in data.notes">
       <h4 class="list-group-item-heading">
         {{note.title}}
       </h4>
